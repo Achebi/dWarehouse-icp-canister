@@ -54,16 +54,27 @@ const clientStorage = new StableBTreeMap<string, Client>(0, 44, 1024);
  * Define functions for getting ALL warehouses, users, and clients
  */
 $query;
-export function getWarehouses(): Result<Vec<Warehouse>, string>{
-    return Result.Ok(warehouseStorage.values());
+export function getWarehouse(id: string): Result<Vec<Warehouse>, string> {
+    return match(warehouseStorage.get(id), {
+        Some: (warehouse) => Result.Ok<Vec<Warehouse>, string>(warehouse),
+        None: () => Result.Err<Vec<Warehouse>, string>(`a warehouse with id=${id} not found`),
+    });
 }
+
 $query;
-export function getUsers(): Result<Vec<User>, string>{
-    return Result.Ok(userStorage.values());
+export function getUser(id: string): Result<Vec<User>, string> {
+    return match(userStorage.get(id), {
+        Some: (user) => Result.Ok<Vec<User>, string>(user),
+        None: () => Result.Err<Vec<User>, string>(`a user with id=${id} not found`),
+    });
 }
+
 $query;
-export function getClients(): Result<Vec<Client>, string>{
-    return Result.Ok(clientStorage.values());
+export function getClient(id: string): Result<Vec<Client>, string> {
+    return match(clientStorage.get(id), {
+        Some: (client) => Result.Ok<Vec<Client>, string>(client),
+        None: () => Result.Err<Vec<Client>, string>(`a client with id=${id} not found`),
+    });
 }
 
 
@@ -96,24 +107,26 @@ export function getClient(id: string): Result<Vec<Client, string>{
  * Define functions for adding a warehouse, a user, and a client
  */
 $update;
-export function addWarehouse(payload: WarehousePayload): Result<Warehouse, String>{
-    const warehouse: Warehouse = {id: uuidv4(), listedOnline: bool = true, ...payload };
+export function addWarehouse(payload: WarehousePayload): Result<Warehouse, string> {
+    const warehouse: Warehouse = { id: uuidv4(), listedOnline: true, ...payload };
     warehouseStorage.insert(warehouse.id, warehouse);
-    return Result.Ok(warehouse));
+    return Result.Ok<Warehouse, string>(warehouse);
 }
 
 $update;
-export function addUser(name: String, userTelNo: String, userEmail: String): Result<User, String>{
-    const user: User = {id: uuidv4(), name: String, userTelNo: String, userEmail: String};
-    warehouseStorage.insert(user.id, user);
-    return Result.Ok(user);
+export function addUser(name: string, userTelNo: string, userEmail: string): Result<User, string> {
+    const user: User = { id: uuidv4(), name: name, userTelNo: userTelNo, userEmail: userEmail };
+    userStorage.insert(user.id, user);
+    return Result.Ok<User, string>(user);
 }
 
+
 $update;
-export function addClient(name: string, bookingDate: string, bookedCapacity: nat64): Result<Client, String>{
-    const client: Client = {id: uuidv4(), name: string, bookingDate: string, bookedCapacity: nat64};
-    warehouseStorage.insert(client.id, client);
-    return Result.Ok(client);
+
+export function addClient(name: string, bookingDate: string, bookedCapacity: nat64): Result<Client, string> {
+    const client: Client = { id: uuidv4(), name: name, bookingDate: bookingDate, bookedCapacity: bookedCapacity };
+    clientStorage.insert(client.id, client);
+    return Result.Ok<Client, string>(client);
 }
 
 /**
