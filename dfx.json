@@ -1,0 +1,30 @@
+{
+  "canisters": {
+    "dwarehouse_backend": {
+      "build": "npx azle dwarehouse_backend",
+      "candid": "src/dwarehouse_backend/dwarehouse_backend.did",
+      "gzip": true,
+      "main": "src/dwarehouse_backend/src/index.ts",
+      "type": "custom",
+      "wasm": ".azle/dwarehouse_backend/dwarehouse_backend.wasm"
+    },
+    "dwarehouse_frontend": {
+      "dependencies": [
+        "dwarehouse_backend"
+      ],
+      "source": [
+        "src/dwarehouse_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "dwarehouse_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
